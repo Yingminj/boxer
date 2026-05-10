@@ -95,8 +95,7 @@ def push_style_color(idx, r, g, b, a=1.0):
 
 
 def image(texture_id, width, height, **kwargs):
-    tex_ref = _imgui.ImTextureRef(int(texture_id))
-    _imgui.image(tex_ref, _imgui.ImVec2(width, height))
+    _imgui.image(int(texture_id), _imgui.ImVec2(width, height))
 
 
 def input_text(label, value, buffer_length=256, flags=0):

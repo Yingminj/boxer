@@ -227,7 +227,7 @@ def main():
             )
 
             # Scale up all ImGui elements
-            imgui.get_style().font_scale_main *= 1.4
+            imgui.get_io().font_global_scale *= 1.4
             self.ui_panel_width = 550
 
             # Load SDP after GL context is ready

@@ -134,7 +134,7 @@ class OrbitViewer(mglw.WindowConfig):
         dpi = self.wnd.pixel_ratio
         # Increase font size on Linux for better readability
         if platform.system() == "Linux":
-            imgui.get_style().font_scale_main = dpi * scale_factor
+            io.font_global_scale = dpi * scale_factor
             # Also scale UI elements (sliders, buttons, etc.) on Linux
             style = imgui.get_style()
             # Manually scale style sizes since scale_all_sizes() may not be available
@@ -159,7 +159,8 @@ class OrbitViewer(mglw.WindowConfig):
             if dpi > 1.0:
                 style = imgui.get_style()
                 style.scale_all_sizes(dpi)
-                imgui.get_style().font_scale_main = dpi
+                io = imgui.get_io()
+                io.font_global_scale = dpi
 
         # --- Orbit camera controls ---
         self.camera_distance = 5.0
