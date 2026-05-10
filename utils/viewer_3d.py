@@ -3192,7 +3192,10 @@ class SequenceOBBViewer(OBBViewer):
             else:
                 print(f"[RGB] Calib/VRS resolution match: {cam_w:.0f}x{cam_h:.0f}")
             self._logged_calib_vrs_mismatch = True
-        if not self._vrs_is_nebula:
+        # Aria Gen 1 rotation is already handled by AriaLoader._single()
+        # (unrotate=True forces cam.rotate_90_cw() + torch.rot90(img, k=3)).
+        # Only rotate here for non-Aria data sources that don't have a loader.
+        if not self._vrs_is_nebula and getattr(self, "_data_source", None) != "aria":
             img = np.rot90(img, k=3).copy()
 
         h, w = img.shape[:2]

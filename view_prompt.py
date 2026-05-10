@@ -443,10 +443,16 @@ def main():
             img_u = u_norm * self._rgb_vrs_w
             img_v = v_norm * self._rgb_vrs_h
 
-            # Aria Gen 1: undo rot90 k=3 applied in _load_rgb_for_timestamp
-            if not self._vrs_is_nebula:
+            # For Aria data, rotation is already handled by AriaLoader._single()
+            # (unrotate=True), so the displayed image is already in the rotated
+            # space that BoxerNet / _load_raw_image expect. No undo needed.
+            # For non-Aria Gen1 (nebula), no rotation at all.
+            # This block only applies to non-Aria data sources where the viewer
+            # itself applies the rotation in _load_rgb_for_timestamp.
+            if (not self._vrs_is_nebula
+                    and getattr(self, "_data_source", None) != "aria"):
                 orig_u = img_v
-                orig_v = self._rgb_vrs_w - 1 - img_u
+                orig_v = self._rgb_vrs_h - 1 - img_u
                 img_u, img_v = orig_u, orig_v
 
             return img_u, img_v
@@ -665,9 +671,11 @@ def main():
             if rect is None:
                 return None
             ix, iy, iw, ih = rect
-            # Aria Gen 1: apply rot90 k=3
-            if not self._vrs_is_nebula:
-                disp_u = self._rgb_vrs_w - 1 - img_v
+            # For Aria data, rotation is already handled by AriaLoader._single(),
+            # so coords are already in the displayed image space. No rotation needed.
+            if (not self._vrs_is_nebula
+                    and getattr(self, "_data_source", None) != "aria"):
+                disp_u = self._rgb_vrs_h - 1 - img_v
                 disp_v = img_u
             else:
                 disp_u = img_u
